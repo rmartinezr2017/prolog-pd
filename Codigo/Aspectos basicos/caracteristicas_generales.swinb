@@ -1,0 +1,65 @@
+<div class="notebook">
+
+<div class="nb-cell markdown" name="md1">
+# Características generales
+</div>
+
+<div class="nb-cell markdown" name="md2">
+**PROLOG** utiliza la programación lógica definida:
+- Su lenguaje es un subconjunto de la **Lógica de Primer Orden**,
+cuyas fórmulas se conocen como cláusulas de Horn.
+- Usa el sistema de demostración llamado **SLD**
+</div>
+
+<div class="nb-cell markdown" name="md3">
+## Ejemplos de programas básicos
+</div>
+
+<div class="nb-cell markdown" name="md4">
+### Mortalidad de Sócrates
+</div>
+
+<div class="nb-cell program" name="p1">
+% PROGRAMA SOBRE LA MORTALIDAD DE SÓCRATES
+
+% persona(X)
+% cierto si X es una persona
+persona(socrates). % HECHO: Sócrates es una persona
+persona(pepa).
+
+% mortal(?X)
+% cierto si X es mortal
+mortal(X) :-
+    persona(X). % REGLA: todas las personas son mortales
+</div>
+
+<div class="nb-cell query" name="q1">
+mortal(Mortales)
+</div>
+
+<div class="nb-cell markdown" name="md5">
+### Abuelos
+</div>
+
+<div class="nb-cell program" name="p2">
+% PROGRANA ABUELOS
+
+% progemitor(?X, ?Y)
+% cierto si X es progenitor/a de Y
+progenitor(pepa, pepito).
+progenitor(pepito, pepita).
+progenitor(pepito, pepon).
+
+% abuelo(?X, ?Y)
+% cierto si X es abuelo/a de Y
+
+abuelo(X, Z) :-
+    progenitor(X, Y),
+    progenitor(Y, Z).
+</div>
+
+<div class="nb-cell query" name="q2">
+abuelo(X, Y)
+</div>
+
+</div>

@@ -1,0 +1,61 @@
+<div class="notebook">
+
+<div class="nb-cell html" name="htm1">
+<script>
+  (function() {
+    var nb = notebook;
+    require(["https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"+
+             "?config=TeX-MML-AM_CHTML"], function() {
+      nb.markdown_post_renderer(function() {
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub,this[0]]);
+      });
+    });
+  })();
+</script>
+</div>
+
+<div class="nb-cell markdown" name="md1">
+# Introducción al paradigma de la Programación Lógica
+</div>
+
+<div class="nb-cell markdown" name="md2">
+La programación lógica hace uso de la **lógica matemática** y la **demostración automática** como herramientas de computo.
+</div>
+
+<div class="nb-cell markdown" name="md3">
+El lenguaje **PROLOG** se basa en un **sistema de resolución con unificación**.
+</div>
+
+<div class="nb-cell markdown" name="md4">
+**PROLOG** permite no solo demostrar razonamientos lógicos, si no, también permite **computar**.
+</div>
+
+<div class="nb-cell markdown" name="md5">
+## Esquema de funcionamiento
+</div>
+
+<div class="nb-cell markdown" name="md6">
+- **PASO 1: Escritura de un programa lógico:**
+    - \(\text{Programa lógico} = \text{conjunto de fórmulas lógicas}\)  
+- **PASO 2: Escritura de una consulta:**
+    - \(\text{Consulta} = \text{fórmula lógica}\)  
+- **PASO 3: Resolución del programa:**
+    - Averigua si la consulta es consecuencia lógica de las premisas
+    - Si la consulta es consecuencia lógica, computa los valores que hacen que la consulta se deduzca del programa.
+</div>
+
+<div class="nb-cell markdown" name="md7">
+### Ejemplo de uso
+</div>
+
+<div class="nb-cell markdown" name="md8">
+- **PASO 1:**  
+    \(\forall X(\text{persona}(X) \rightarrow \text{mortal}(X))\)  
+    \(\text{persona}(\text{Sócrates})\)  
+- **PASO 2:**  
+    \(\exists Y \text{mortal}(Y)\)  
+- **PASO 3:**  
+    \(Y = \text{Sócrates}\)
+</div>
+
+</div>
