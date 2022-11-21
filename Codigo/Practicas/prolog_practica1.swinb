@@ -641,14 +641,21 @@ puede definir de forma recursiva como sigue:
 % 
 %  INTRODUZCA AQUÍ SU CÓDIGO
 %
+% CASO BASE: 
+ancestro(X,Y) :-
+    progenitor(X,Y).
+
+% CASO RECURSIVO:
+ancestro(X,Y) :-
+    progenitor(X,Z), ancestro(Z,Y).
 </div>
 
 <div class="nb-cell query" name="q51">
-
+ancestro(X, pepa12) % Ascendientes de pepa12
 </div>
 
 <div class="nb-cell query" name="q52">
-
+ancestro(pepe, Y) % Descendientes de pepe
 </div>
 
 <div class="nb-cell html" name="htm53">
@@ -684,14 +691,25 @@ pariente de sí mismo.
 % pariente(?X,?Y), cierto si X es un pariente (mujer o varón) de Y.
 % 
 %  INTRODUZCA AQUÍ SU CÓDIGO
+pariente(X,Y) :-
+    ancestro(X,Y),
+	X \= Y.
+
+pariente(X,Y) :-
+    ancestro(Y,X),
+    X \= Y.
+
+pariente(X,Y) :-
+    ancestro(Z,X), ancestro(Z,Y),
+    X \= Y.
 </div>
 
 <div class="nb-cell query" name="q1">
-
+pariente(pepe, pepe121)
 </div>
 
 <div class="nb-cell query" name="q2">
-
+pariente(pepa11,Y)
 </div>
 
 <div class="nb-cell html" name="htm7">
