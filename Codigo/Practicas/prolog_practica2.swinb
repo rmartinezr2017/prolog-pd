@@ -1,0 +1,719 @@
+<div class="notebook">
+
+<div class="nb-cell html" name="htm1">
+<h3>PROGRAMACIÓN LÓGICA</h3>
+<h4>3º GRADO EN INGENIERÍA INFORMÁTICA, URJC</h4>
+<h4><strong> PRÁCTICA DE PROLOG Nº2: Aritmética </strong></h4>
+© 2022 Ana Pradera Gómez.
+ Algunos derechos reservados. 
+Este documento se distribuye bajo la licencia  
+<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">Atribución-CompartirIgual 4.0 Internacional de Creative Commons</a>.
+</div>
+
+<div class="nb-cell html" name="htm8">
+<strong>Prerrequisitos</strong><br>
+
+Para la realización de esta segunda práctica de Programación Lógica 
+es necesario haber leído y estudiado los apartados 1-6 del tema PL-2, en los que se describen las características generales del lenguaje Prolog, 
+su sintaxis y semántica, aritmética, entrada/salida y comparación/clasificación de términos.
+</div>
+
+<div class="nb-cell html" name="htm2">
+<h4><strong>1. Uso básico de operadores y predicados aritméticos </strong></h4>
+
+Las siguientes consultas contienen operadores y predicados aritméticos
+ así como predicados de unificación y comparación de términos. Piense para cada una de 
+ellas, sin usar el intérprete, cuál(es) sería(n) la(s) respuesta(s) ofrecidas por Prolog.
+A continuación compruebe sus respuestas ejecutando las consultas 
+(flecha azul de la derecha).
+</div>
+
+<div class="nb-cell html" name="htm23">
+Recuerde en particular el funcionamiento de los predicados aritméticos:
+<ul>
+  <li> <code> X is Y </code> es cierto si Y es una expresión aritmética evaluable y X, <em>que puede ser cualquier término</em>, unifica con el 
+    resultado de evaluar Y. Si Y no es una expresión aritmética o no puede evaluarla, 
+    Prolog produce un error. Si X, <em>tal cual está</em>, es unificable 
+    con el resultado de evaluar Y, se realiza la unificación, y si no lo es, el predicado falla. 
+  </li><li> <code>X =:= Y, X =\= Y, X &gt; Y, X &gt;= Y, X &lt; Y, X =&lt; Y</code> son ciertos si X e Y son expresiones aritméticas, se pueden
+  evaluar (<em>ambas</em>), y los valores evaluados son iguales/no son iguales/cumplen la relación de orden expresada. 
+  Si X o Y no son expresiones 
+  aritméticas o no puede evaluarlas, Prolog produce un error. OJO a la forma poco habitual de
+  escribir el menor o igual: <code>X =&lt; Y</code> en lugar de <code>X &lt;= Y</code> (para
+  evitar la confusión con la implicación lógica).
+  </li></ul>
+y las diferencias de los predicados anteriores con los de unificación y comparación:
+<ul>
+ <li> <code>X = Y ( X \= Y )</code> es cierto si X e Y son términos
+que son (no son) unificables
+  </li><li> <code>X == Y ( X \== Y )</code> es cierto si X e Y son términos
+que son (no son) literalmente
+idénticos.
+</li></ul>
+</div>
+
+<div class="nb-cell query" name="q1">
+X is 2*3-4, Y is 2^X.
+</div>
+
+<div class="nb-cell markdown" name="md1">
+Resultado: `X=2`, `Y=4`
+</div>
+
+<div class="nb-cell query" name="q52">
+X is X+1.
+</div>
+
+<div class="nb-cell markdown" name="md2">
+Resultado: ``ERROR DE INSTANCIACION``
+</div>
+
+<div class="nb-cell query" name="q53">
+X is a*3^2.
+</div>
+
+<div class="nb-cell markdown" name="md3">
+Resultado: ``ERROR ARITMETICO``
+</div>
+
+<div class="nb-cell query" name="q8">
+X = 2, X is X+1.
+</div>
+
+<div class="nb-cell markdown" name="md4">
+Resultado: ``FALSE``
+</div>
+
+<div class="nb-cell query" name="q9">
+X is Y+1.
+</div>
+
+<div class="nb-cell markdown" name="md5">
+Resultado: ``ERROR DE INSTANCIACION``
+</div>
+
+<div class="nb-cell query" name="q46">
+4 + 2.
+</div>
+
+<div class="nb-cell markdown" name="md6">
+Resultado: ``ERROR PREDICADO NO EXISTE``
+</div>
+
+<div class="nb-cell query" name="q47">
+4 mod 2 =:= X.
+</div>
+
+<div class="nb-cell markdown" name="md7">
+Resultado: ``ERROR DE INSTANCIACION``
+</div>
+
+<div class="nb-cell query" name="q48">
+X is 4 mod 2, 6 mod 2 =:= X.
+</div>
+
+<div class="nb-cell markdown" name="md8">
+Resultado: ``X=0``
+</div>
+
+<div class="nb-cell query" name="q38">
+Z = 6/2, X is Z + 1, X &gt;= 2+1.
+</div>
+
+<div class="nb-cell markdown" name="md9">
+Resultado: ``X=4``,``Z=3``
+</div>
+
+<div class="nb-cell query" name="q39">
+Z=2*3, 3+4 =:= Z+1.
+</div>
+
+<div class="nb-cell markdown" name="md10">
+Resultado: ``Z=6``
+</div>
+
+<div class="nb-cell query" name="q40">
+C=1, T=2*3, L is [C,T].
+</div>
+
+<div class="nb-cell markdown" name="md11">
+Resultado: ``ERROR ARITMETICO``
+</div>
+
+<div class="nb-cell query" name="q41">
+C=1, T=2*3, L is C*T.
+</div>
+
+<div class="nb-cell markdown" name="md12">
+Resultado: ``L=6``, ``C=1``, `T=2*3`
+</div>
+
+<div class="nb-cell query" name="q2">
+3 =\= 3*a.
+</div>
+
+<div class="nb-cell markdown" name="md13">
+Resultado: ``ERROR ARITMETICO``
+</div>
+
+<div class="nb-cell query" name="q4">
+3 =\= 3*X, X = 5.
+</div>
+
+<div class="nb-cell markdown" name="md14">
+Resultado: ``ERROR DE INSTANCIACION``
+</div>
+
+<div class="nb-cell query" name="q3">
+3 \= 3*a.
+</div>
+
+<div class="nb-cell markdown" name="md15">
+Resultado: ``TRUE``
+</div>
+
+<div class="nb-cell query" name="q42">
+3 \== 3*a.
+</div>
+
+<div class="nb-cell markdown" name="md16">
+Resultado: ``TRUE``
+</div>
+
+<div class="nb-cell query" name="q43">
+3 = 1+2.
+</div>
+
+<div class="nb-cell markdown" name="md17">
+Resultado: ``FALSE``
+</div>
+
+<div class="nb-cell query" name="q44">
+3 == 1+2, X = 3.
+</div>
+
+<div class="nb-cell markdown" name="md18">
+Resultado: ``FALSE``
+</div>
+
+<div class="nb-cell query" name="q45">
+3 =:= 1+2.
+</div>
+
+<div class="nb-cell markdown" name="md19">
+Resultado: ``TRUE``
+</div>
+
+<div class="nb-cell query" name="q5">
+X = 3+5, X =:= 8.
+</div>
+
+<div class="nb-cell markdown" name="md20">
+Resultado: ``TRUE``
+</div>
+
+<div class="nb-cell query" name="q6">
+X = 3+5, X == 8.
+</div>
+
+<div class="nb-cell markdown" name="md21">
+Resultado: ``FALSE``
+</div>
+
+<div class="nb-cell query" name="q7">
+X = 3+5, X is 8.
+</div>
+
+<div class="nb-cell markdown" name="md22">
+Resultado: ``FALSE``
+</div>
+
+<div class="nb-cell query" name="q49">
+X is 8, X is 3+5.
+</div>
+
+<div class="nb-cell markdown" name="md23">
+Resultado: ``X=8``
+</div>
+
+<div class="nb-cell query" name="q50">
+X is 3+5, X == 8.
+</div>
+
+<div class="nb-cell markdown" name="md24">
+Resultado: ``X=8``
+</div>
+
+<div class="nb-cell query" name="q51">
+X is 3+5, X=:= 8.
+</div>
+
+<div class="nb-cell markdown" name="md25">
+Resultado: ``X=8``
+</div>
+
+<div class="nb-cell html" name="htm5">
+<h4><strong> 2. Cálculo de factoriales</strong></h4>
+
+
+En este apartado se utiliza el predicado para el cálculo de factoriales
+<code>"factorial/2"</code> discutido en los apuntes para destacar algunos detalles de su implementación que son
+aplicables a muchos otros predicados aritméticos en Prolog:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p1">
+% factorial(+X, ?Y)
+% cierto si Y es el factorial del número natural X.
+
+factorial(0, 1).
+
+factorial(X, Y) :-
+    integer(X),
+    X &gt; 0,
+    Z is X - 1,
+    factorial(Z, FZ),
+    Y is X*FZ.
+</div>
+
+<div class="nb-cell html" name="htm7">
+<h5> <strong>2.1. El primer parámetro <emph> solo puede ser de entrada </emph></strong></h5>
+  
+  Como se comenta en los apuntes, la aritmética de Prolog, comparada
+  con el uso de la lógica "pura", tiene muchas ventajas (comodidad, 
+  eficiencia), pero también algún inconveniente: ciertos
+  parámetros pierden la versatilidad de poder usarse tanto de
+  entrada como de salida. <br><br>
+
+Antes de ejecutar las siguientes consultas, piense qué respuesta(s) se 
+obtendrían y por qué:
+</div>
+
+<div class="nb-cell query" name="q15">
+factorial(2, 2).
+</div>
+
+<div class="nb-cell markdown" name="md26">
+Resultado: ``TRUE``
+</div>
+
+<div class="nb-cell query" name="q14">
+factorial(2, X).
+</div>
+
+<div class="nb-cell markdown" name="md27">
+Resultado: ``X=2``
+</div>
+
+<div class="nb-cell query" name="q13">
+factorial(X, 2).
+</div>
+
+<div class="nb-cell markdown" name="md28">
+Resultado: ``FALSE``
+</div>
+
+<div class="nb-cell html" name="htm13">
+Como habrá observado, <code>factorial/2</code>  sabe comprobar y calcular
+factoriales (primera y segunda consulta) pero sin embargo no es capaz
+de averiguar si existe algún X cuyo
+factorial es igual a 2 (tercera consulta). La respuesta negativa en
+este último caso se debe a la línea <code>integer(X)</code>, que
+evita el error de instanciación que produciría la línea
+siguiente, <code>X &gt; 0</code>, al recibir
+algo que no puede evaluar. El primer argumento del predicado tiene que ser
+necesariamente de entrada (como se indica con el "+X" del comentario previo al código),
+y el predicado es por lo tanto válido
+para calcular factoriales, pero ya no sirve para averiguar
+si un número es el factorial de otro.<br><br>
+
+Lo anterior ocurre en general con todos los predicados
+implementados usando la aritmética de Prolog: son mucho
+más cómodos y eficientes que los predicados basados en lógica "pura",
+pero son menos versátiles porque algunos parámetros (aquellos que aparecen
+como argumentos de predicados de comparación aritméticos o en la parte
+derecha de un <code>is</code>) ya solo
+se pueden usar como parámetros de entrada.
+</div>
+
+<div class="nb-cell html" name="htm3">
+<h5> <strong>2.2. Uso de <code>integer(X)</code> para evitar errores en tiempo de ejecución </strong></h5>
+</div>
+
+<div class="nb-cell html" name="htm11">
+A continuación se demuestra la utilidad de la línea <code>integer(X)</code>
+para evitar errores en tiempo de ejecución debidos a la introducción de
+tipos de datos no esperados.<br><br>
+
+Antes de ejecutar la siguiente consulta, piense qué respuesta(s) se 
+obtendrían y por qué:
+</div>
+
+<div class="nb-cell query" name="q10">
+factorial(a, F).
+</div>
+
+<div class="nb-cell markdown" name="md29">
+Resultado: ``FALSE``, ``integer(a)=false``
+</div>
+
+<div class="nb-cell html" name="htm12">
+Efectivamente, la respuesta correcta ante la pregunta "¿Existe algún
+número que sea el factorial de a?" debe ser negativa, puesto que "a"
+no es un número natural y por lo tanto no tiene factorial. Esta respuesta
+negativa la produce el predicado de clasificación 
+<code>integer(X)</code>.<br><br>
+
+¿Qué respuesta cree que se obtendría ante la misma pregunta si
+se suprimiese la línea <code>integer(X)</code> del código anterior?
+¿Por qué? Compruebe su respuesta comentando dicha línea y ejecutando de nuevo
+la consulta dada.<br><br>
+
+Suponga ahora que la comprobación <code>integer(X)</code> se mantiene
+pero se sitúa detrás de <code>X &gt; 0</code>. 
+¿Cree que este cambio tendría alguna importancia? ¿Por qué? 
+Compruebe su respuesta intercambiando el orden de las dos líneas
+en el código anterior y ejecutando de nuevo
+la consulta dada.<br><br>
+</div>
+
+<div class="nb-cell markdown" name="md30">
+**1-** Al suprimir ``integer(x)`` provocariamos un error de tipo **aritmético**
+</div>
+
+<div class="nb-cell markdown" name="md31">
+**2-** Al suprimir ``x&gt;0``, el programa podría admitir números negativos de los cuales no se pueden calcular sus factoriales, además de que evita computaciones infinitas en caso de que se deseé calcular nuevos resultados una vez obtenido uno.
+</div>
+
+<div class="nb-cell html" name="htm10">
+<h5> <strong>2.3. Uso de <code>X &gt; 0</code> para evitar computaciones infinitas  </strong></h5>
+</div>
+
+<div class="nb-cell html" name="htm14">
+En lo que sigue se muestra cómo la comprobación <code>X &gt; 0</code> no solo
+sirve para asegurar que no se intenta computar el factorial de números
+negativos, sino también para evitar computaciones infinitas si se
+solicitan más soluciones una vez obtenida la única solución válida.
+</div>
+
+<div class="nb-cell html" name="htm9">
+Antes de ejecutar las siguientes consultas, piense en los árboles de Resolución
+correspondientes para saber qué respuesta(s) se 
+obtendría(n) (todas las posibles respuestas) y por qué:
+</div>
+
+<div class="nb-cell query" name="q11">
+factorial(-3, F).
+</div>
+
+<div class="nb-cell query" name="q12">
+factorial(1, F).
+</div>
+
+<div class="nb-cell html" name="htm16">
+¿Qué cree que ocurriría ante las mismas consultas si
+se suprimiese la línea <code>X &gt; 0</code> del código anterior?
+¿Por qué? Compruébelo comentando dicha línea y ejecutando
+de nuevo
+las dos consultas anteriores.
+</div>
+
+<div class="nb-cell markdown" name="md32">
+**1-** Al suprimir la línea entraríamos en recursión infinita provocando stack overflow
+</div>
+
+<div class="nb-cell html" name="htm6">
+<h4><strong> 3. Cálculo de densidades</strong></h4>
+
+En este apartado se practica el uso de la aritmética de Prolog con 
+un ejemplo sencillo. Considere el siguiente programa:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p3">
+% num_habitantes(?X, ?Y)
+% cierto si Y es el número de habitantes (en millones) de Y.
+num_habitantes('India', 1324).
+num_habitantes('China', 1403).
+num_habitantes('Brasil', 210).
+num_habitantes('España', 47).
+ 
+% area(?X, ?Y)
+% cierto si Y es el área (en millones de km. cuadrados) de X.
+area('India', 3.288).
+area('China', 9.597).
+area('Brasil', 8.512).
+area('España', 0.505).
+</div>
+
+<div class="nb-cell html" name="htm4">
+Dados los predicados anteriores, implemente el siguiente predicado:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p4">
+% densidad(?X, ?D)
+% cierto si D es la densidad de población del país X
+% (habitantes por kilómetro cuadrado)
+
+ %  ESCRIBA SU CÓDIGO A CONTINUACIÓN
+ %
+
+densidad(X,D) :-
+    num_habitantes(X,H),
+    area(X,A),
+    D is H/A.
+</div>
+
+<div class="nb-cell html" name="htm15">
+y pruébelo escribiendo en Prolog y ejecutando, al menos,
+las siguientes consultas:
+</div>
+
+<div class="nb-cell html" name="htm17">
+Consulta 1: ¿Qué paı́ses existen con una densidad mayor que 100?
+</div>
+
+<div class="nb-cell query" name="q16">
+densidad(P, _D), _D&gt;100
+</div>
+
+<div class="nb-cell html" name="htm18">
+Consulta 2: ¿Qué paises existen con menos de 50 millones de 
+habitantes, área menor que 1 millón de km cuadrados y densidad 
+menor que 100?
+</div>
+
+<div class="nb-cell query" name="q17">
+num_habitantes(P,_N), _N&lt;50, area(P, _A), _A&lt;1, densidad(P,_D), _D&lt;100
+</div>
+
+<div class="nb-cell html" name="htm19">
+Consulta 3: ¿Qué países existen con más de 5 millones de kilómetros
+cuadrados de extensión y con una densidad menor o igual que 100?
+</div>
+
+<div class="nb-cell query" name="q18">
+area(P,_A), _A&gt;5, densidad(P, _D), _D=&lt;100
+</div>
+
+<div class="nb-cell html" name="htm21">
+<h4><strong> 4. Implementación de algunos predicados aritméticos</strong></h4>
+
+Utilizando los operadores y predicados aritméticos predefinidos de Prolog, escriba y pruebe los
+siguientes programas para números naturales. Las implementaciones se harán de forma que
+no se produzca ningún error en tiempo de ejecución (por ejemplo errores de instanciación),
+para lo cual será necesario comprobar que los argumentos recibidos son efectivamente números
+naturales. <br><br>
+
+Cuando su implementación presente <strong>recursión lineal</strong>
+(una única llamada recursiva) pero sea <strong>recursión no final</strong> 
+(la llamada recursiva no es lo último que se ejecuta), <em>implemente una segunda
+  versión con <strong>recursión final</strong></em> mediante el uso de parámetros de 
+acumulación, de forma similar a como se hace en los apuntes con
+el predicado factorial.<br><br>
+
+Añada todas las consultas de prueba que considere oportunas.
+</div>
+
+<div class="nb-cell program" data-background="true" name="p5">
+% natural(+X)
+% cierto si X es un número natural
+% (puede usar el predicado predefinido integer(+X))
+%
+</div>
+
+<div class="nb-cell query" name="q19">
+
+</div>
+
+<div class="nb-cell query" name="q20">
+
+</div>
+
+<div class="nb-cell query" name="q34">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p6">
+% fib(+N, ?F)
+% cierto si F es el número de Fibonacci asociado con N.
+% Recuerde que cada número natural n tiene asociado otro número
+% natural f(n), denominado número de Fibonacci, que se calcula
+% como sigue: f(0)= f(1)=1 ; f(n) = f(n-1)+f(n-2) si n&gt;1.
+%
+</div>
+
+<div class="nb-cell query" name="q21">
+
+</div>
+
+<div class="nb-cell query" name="q22">
+
+</div>
+
+<div class="nb-cell query" name="q35">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p7">
+% mcd(+M, +N, ?MCD)
+% cierto si MCD es el máximo común divisor de M y N.
+% Recuerde que una forma sencilla de calcular el mcd
+% de dos números naturales es utilizar el algoritmo de Euclides:
+% - El mcd de M y 0 es M.
+% - El mcd de M y N es igual al mcd de N y de (M mod N) 
+% (resto de la división entera).
+%
+</div>
+
+<div class="nb-cell query" name="q23">
+
+</div>
+
+<div class="nb-cell query" name="q24">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p8">
+% exp(+M, +N, ?E)
+% cierto si E es igual a M elevado a N
+% Recuerde que el valor x^y puede definirse de forma recursiva
+% como sigue:
+% - Para todo x, x^0 = 1.
+% - Para todo x y para todo y&gt;0, x^y = x * x^{y-1}
+%
+</div>
+
+<div class="nb-cell query" name="q36">
+
+</div>
+
+<div class="nb-cell query" name="q25">
+
+</div>
+
+<div class="nb-cell query" name="q26">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p9">
+% num_t(+N,?T)
+% cierto si T es el número triangular asociado con N,
+% que se define como la suma de todos los números naturales
+% menores o iguales a N.
+%
+</div>
+
+<div class="nb-cell query" name="q37">
+
+</div>
+
+<div class="nb-cell query" name="q27">
+
+</div>
+
+<div class="nb-cell query" name="q28">
+
+</div>
+
+<div class="nb-cell html" name="htm20">
+<h4><strong> 5. Evaluación de expresiones aritméticas</strong></h4>
+
+Aunque los predicados aritméticos de Prolog permiten evaluar expresiones aritméticas, 
+es interesante entender cómo podría definirse un predicado para evaluar este tipo de 
+expresiones, es decir, cómo definir el predicado <code>eval(+E, ?V)</code>, cierto 
+si E es una expresión aritmética y V es el valor resultante después de evaluar E. 
+Por ejemplo, la consulta "?- eval(5, X)." debe devolver X=5, mientras que 
+"?- eval(2+(3-12), X)." debe devolver X= -7.<br><br>
+
+Algunas de las reglas del predicado
+<code>eval</code> vendrían dadas por lo siguiente:
+
+<ul>
+<li> El valor asociado con una expresión aritmética elemental (un número) es el propio número.
+  </li>
+<li> Para evaluar una expresión de la forma A+B, donde A y B son expresiones aritméticas 
+  cualesquiera, hay que evaluar (recursivamente) tanto A como B y sumar los valores obtenidos.
+  </li>
+</ul>
+Las reglas con las que se escribiría en Prolog el conocimiento 
+anterior están incorporadas al programa que se facilita a continuación.
+Se pide:
+<ul>
+<li> 
+Complete el programa de forma que sea posible evaluar 
+  expresiones aritméticas tales que, además de la suma, admitan la 
+  resta, el producto y la división.
+  </li>
+  
+  <li> Complete el programa de forma que las expresiones 
+    puedan además incluir operandos del tipo "fact(N)", siendo N un
+    número natural, cuyo valor sea el factorial de N. Para ello,
+    habrá que definir una regla con cabeza "eval(fact(N), V)", 
+    cierta si V es el factorial del número N, en cuyo cuerpo
+    se usará el predicado <code>factorial/2</code> definido más arriba.
+  </li>
+  
+<li> Compruebe que todo lo implementado es correcto evaluando 
+  algunas expresiones aritméticas significativas. Por ejemplo, 
+  haga la consulta ?- eval(3*2+fact(4), V) y construya sobre 
+  papel el árbol de Resolución correspondiente.
+  </li>
+</ul>
+</div>
+
+<div class="nb-cell program" data-background="true" name="p10">
+% eval(+E, ?V) 
+% cierto si E es una expresión aritmética y V es su valor
+
+eval(N, N) :-
+    number(N).
+    
+eval(A+B, V) :-
+    eval(A, VA), eval(B, VB), V is VA + VB.
+
+%% ESCRIBA A CONTINUACIÓN EL RESTO DEL CÓDIGO
+</div>
+
+<div class="nb-cell query" name="q29">
+
+</div>
+
+<div class="nb-cell query" name="q30">
+
+</div>
+
+<div class="nb-cell query" name="q31">
+
+</div>
+
+<div class="nb-cell html" name="htm22">
+<h4><strong> 6. Algo de entrada/salida</strong></h4>
+
+Utilizando las facilidades de Prolog para realizar operaciones de
+entrada/salida, implemente y pruebe los dos siguientes
+predicados:
+</div>
+
+<div class="nb-cell program" data-background="true" name="p11">
+% cubo
+% predicado sin argumentos que solicita un número y escribe
+% el cubo de dicho número, realizando el proceso anterior de
+% forma reiterada hasta que el usuario introduce la palabra fin.
+
+
+
+% prueba(+N, +T)
+% Si N es un entero positivo y T es un término cualquiera,
+% el predicado prueba escribe N líneas conteniendo cada una 
+% de ellas el término T.
+%
+</div>
+
+<div class="nb-cell query" name="q32">
+cubo.
+</div>
+
+<div class="nb-cell query" name="q33">
+prueba(5, hola).
+</div>
+
+</div>
