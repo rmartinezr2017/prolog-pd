@@ -1,0 +1,733 @@
+<div class="notebook">
+
+<div class="nb-cell html" name="htm1">
+<h3>PROGRAMACIÓN LÓGICA</h3>
+<h4>3º GRADO EN INGENIERÍA INFORMÁTICA, URJC</h4>
+<h4><strong> PRÁCTICA DE PROLOG Nº3: Listas y predicado de corte </strong></h4>
+© 2022 Ana Pradera Gómez.
+ Algunos derechos reservados. 
+Este documento se distribuye bajo la licencia  
+<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es">Atribución-CompartirIgual 4.0 Internacional de Creative Commons</a>.
+</div>
+
+<div class="nb-cell html" name="htm8">
+<strong>Prerrequisitos</strong><br>
+
+Para la realización de esta tercera práctica de Programación Lógica 
+es necesario haber leído y estudiado el tema PL2 completo, especialmente los dos últimos apartados,
+dedicados al manejo de listas y al predicado de corte.
+</div>
+
+<div class="nb-cell html" name="htm2">
+<h4><strong>1. Manejo básico de listas en Prolog </strong></h4>
+
+Recuerde que en Prolog:
+<ul>
+<li> La lista vacía se representa mediante <code>[]</code>. </li>
+<li> Toda lista no vacía se puede escribir de la forma 
+<code>[a1,...,an]</code> y es unificable con un patrón del tipo
+<code>[C | R]</code> siempre y cuando <code>C</code> unifique con 
+la cabeza de la lista, <code>a1</code>, y R unifique con el resto
+de la lista, <code>[a2,...,an]</code>.</li>
+<li> Toda lista que tenga al menos dos elementos es unificable con un 
+patrón del tipo <code>[C1, C2 | R]</code> siempre y cuando 
+<code>C1</code> unifique con 
+la cabeza de la lista, <code>C2</code> unifique con su
+segundo elemento y R unifique con el resto
+de la lista.</li>
+<li> De forma similar, <code>[C1, C2, C3 | R]</code> podría 
+unificar con listas de al menos tres elementos, etc.
+  </li></ul>
+Note en particular que a la derecha de la barra vertical
+<code>|</code> solo puede haber una lista o algo unificable 
+con una lista, por ejemplo la lista <code>[1,2]</code> se 
+puede escribir como <code>[1,2 | []]</code>, como  
+<code>[1 | [2]]</code> o como <code>[1 | [2|[]]]</code>, pero <em>no</em> como 
+<code>[1 | 2]</code>. Esto último <em>no</em> es una lista. 
+Tampoco una variable es una lista, por lo que una forma de implementar
+el predicado <code>es_lista(+X)</code>, cierto si X es una 
+lista, sería la siguiente (SWI Prolog ofrece este predicado bajo el 
+nombre de <code>is_list(+X)</code>):
+</div>
+
+<div class="nb-cell program" data-background="true" name="p15">
+% es_lista(+X)
+% cierto si X es una lista
+
+% X no puede ser una variable y tiene que unificar
+% con la lista vacía [] o con el patrón [C|R] siendo
+% R a su vez una lista:
+
+es_lista(X) :- nonvar(X), X = [].
+es_lista(X) :- nonvar(X), X = [_|R], es_lista(R).
+
+% Cuando sepa cómo manejar el predicado de corte, !, observe que
+% una implementación equivalente a la anterior sería la siguiente:
+
+% si X es una variable, se impide el uso de las 
+% siguientes cláusulas (mediante el predicado de corte) y se 
+% devuelve falso (mediante el predicado fail, que siempre es falso):
+es_list(X) :-
+    var(X),
+    !,
+    fail.
+
+% si X no es una variable, tiene que unificar
+% con la lista vacía [] o con el patrón [C|R] siendo
+% R a su vez una lista:
+es_list([]).
+es_list([_|R]) :-
+    es_list(R).
+</div>
+
+<div class="nb-cell html" name="htm25">
+Pruebe el predicado anterior con algunas consultas como las siguientes, 
+pensando en cómo sería el árbol de Resolución correspondiente y, en consecuencia, cuál(es) será(n) la(s) respuesta(s) obtenidas.
+</div>
+
+<div class="nb-cell query" name="q54">
+es_lista(X).
+</div>
+
+<div class="nb-cell markdown" name="md2">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q55">
+es_lista(a).
+</div>
+
+<div class="nb-cell markdown" name="md3">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q56">
+es_lista([a,b]).
+</div>
+
+<div class="nb-cell markdown" name="md4">
+Resultado: ``true``
+</div>
+
+<div class="nb-cell query" name="q57">
+es_lista([a|b]).
+</div>
+
+<div class="nb-cell markdown" name="md5">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q58">
+es_lista([a|R]).
+</div>
+
+<div class="nb-cell markdown" name="md6">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q59">
+R = [b], es_lista([a|R]).
+</div>
+
+<div class="nb-cell markdown" name="md7">
+Resultado: ``R=[b]``
+</div>
+
+<div class="nb-cell query" name="q25">
+R = b, es_lista([a|R]).
+</div>
+
+<div class="nb-cell markdown" name="md8">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell html" name="htm23">
+Para cada una de las siguientes consultas, piense cuál(es) sería(n) la(s) respuesta(s) 
+ofrecidas por Prolog y a continuación compruebe sus 
+respuestas ejecutándolas.
+</div>
+
+<div class="nb-cell query" name="q1">
+[] = _.
+</div>
+
+<div class="nb-cell markdown" name="md9">
+Resultado: ``true``
+</div>
+
+<div class="nb-cell query" name="q8">
+[] = [_].
+</div>
+
+<div class="nb-cell markdown" name="md10">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q9">
+[a] = [A | []].
+</div>
+
+<div class="nb-cell markdown" name="md11">
+Resultado: ``A=a``
+</div>
+
+<div class="nb-cell query" name="q46">
+[a,b] = [a | b].
+</div>
+
+<div class="nb-cell markdown" name="md12">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q47">
+[a,b] = [A | [b | []]].
+</div>
+
+<div class="nb-cell markdown" name="md13">
+Resultado: ``A=a``
+</div>
+
+<div class="nb-cell query" name="q48">
+[X,1] = [1,1,A | R].
+</div>
+
+<div class="nb-cell markdown" name="md14">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q38">
+[X,1,Y] = [1,_,b | Z].
+</div>
+
+<div class="nb-cell markdown" name="md15">
+Resultado: ``X=1; Y=b; Z=[]``
+</div>
+
+<div class="nb-cell query" name="q34">
+[X,1,X] = [1,_,b | Z].
+</div>
+
+<div class="nb-cell markdown" name="md16">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q39">
+[a,b,[c,d]] = [_, X | Y].
+</div>
+
+<div class="nb-cell markdown" name="md17">
+Resultado: ``X=b; Y=[[c,d]]``
+</div>
+
+<div class="nb-cell query" name="q40">
+[a|R] = [a,b,[c],lista].
+</div>
+
+<div class="nb-cell markdown" name="md18">
+Resultado: ``R=[b,[c],lista]``
+</div>
+
+<div class="nb-cell query" name="q41">
+[a, [b]] = [A | [b]].
+</div>
+
+<div class="nb-cell markdown" name="md19">
+Resultado: ``false``
+</div>
+
+<div class="nb-cell query" name="q2">
+[a,[b,c]] = [A|[[B,c]]].
+</div>
+
+<div class="nb-cell markdown" name="md20">
+Resultado: ``A=a; B=b``
+</div>
+
+<div class="nb-cell query" name="q4">
+[a,b,c] = [a, B | [C]].
+</div>
+
+<div class="nb-cell markdown" name="md21">
+Resultado: ``B=b; C=c``
+</div>
+
+<div class="nb-cell query" name="q3">
+[[a], [b,c], [D]] = [[A] | R].
+</div>
+
+<div class="nb-cell markdown" name="md22">
+Resultado: ``A=a, R=[[b,c], [D]]``
+</div>
+
+<div class="nb-cell html" name="htm6">
+En la siguiente consulta <code>p</code> no es más que el nombre de un término compuesto cuyo único objeto es unificar sus argumentos.
+</div>
+
+<div class="nb-cell query" name="q42">
+p([C],3,[C|NL]) = p(R,N,[1,2]), [X|Y] = [N,C|R], Z is 2*X.
+</div>
+
+<div class="nb-cell markdown" name="md23">
+Resultado: ``C=1; NL=[2]; R=[1]; N=3; X=3; Y=[1,1]; Z=6``
+</div>
+
+<div class="nb-cell html" name="htm3">
+<h4><strong> 2. Uso de predicados básicos sobre listas y del predicado de corte</strong></h4>
+
+Antes de ejecutar las siguientes consultas piense qué 
+ocurrirá al ejecutarlas (se 
+producirá un error, la respuesta será false, la respuesta 
+será true, se producirá una computación infinita, la o las 
+respuestas serán ....). Tenga en cuenta en particular que las implementaciones de 
+<code>member</code> y <code>append</code> son las estudiadas en clase para los predicados 
+<code>pertenece</code> y <code>concatena</code>: 
+<ul>
+<li> <code>member(E,L) (pertenece)</code>, usado con <code>E</code> de salida y <code>L</code> de entrada,  al hacer <emph>backtracking</emph>, 
+  va unificando <code>E</code> con los distintos elementos de la lista <code>L</code> (empezando por su cabeza).
+</li><li> <code>append(L1,L2,L) (concatena) </code>, usado con <code>L1</code> y <code>L2</code> de salida y
+  <code>L</code> de entrada, al hacer <emph>backtracking</emph>, va unificando <code>L1</code> y <code>L2</code> con 
+  las posibles listas que resultan de descomponer en dos trozos la lista <code>L</code> (empezando con <code>L1=[], L2=L</code>).
+</li></ul>
+En los apuntes puede repasar las implementaciones de estos predicados, así como algunos ejemplos de árboles de Resolución 
+que los involucran.
+
+Recuerde también que el predicado de corte, <code>!</code>, impide la reevaluación por backtracking de los 
+sub-objetivos que le preceden: por ejemplo, en la evaluación de algo del estilo <code>Obj1, Obj2, !, Obj3</code>, el corte,
+si se llega a él, impide las posibles reevaluaciones tanto de <code>Obj1</code> como de <code>Obj2</code>, pero NO impide
+las posibles reevaluaciones de <code>Obj3 </code>.
+</div>
+
+<div class="nb-cell query" name="q28">
+member(A,[[a,b],[c,d]]), member(B,A).
+</div>
+
+<div class="nb-cell markdown" name="md24">
+Resultado: ``A=[a,b]; B=a;
+		     A=[a,b]; B=b;
+             A=[c,d]; B=c;
+             A=[c,d]; B=d;``
+</div>
+
+<div class="nb-cell query" name="q29">
+member(A,[[a,b],[c,d]]), !, member(B,A).
+</div>
+
+<div class="nb-cell markdown" name="md25">
+Resultado: ``A=[a,b]; B=a;
+			 A=[a,b]; B=b``
+</div>
+
+<div class="nb-cell query" name="q30">
+member(A,[[a,b],[c,d]]), member(B,A), !.
+</div>
+
+<div class="nb-cell markdown" name="md26">
+Resultado: ``
+			 A=[a,b]; B=a
+           ``
+</div>
+
+<div class="nb-cell query" name="q16">
+append(X, Y, [a,b]), length(X, N), N =&lt; 1.
+</div>
+
+<div class="nb-cell markdown" name="md27">
+Resultado: ``X=[]; Y=[a,b]; N=0;
+			 X=[a]; Y=[b]; N=1;
+           ``
+</div>
+
+<div class="nb-cell query" name="q17">
+append([X|_], Y, [a,b]), length(Y, N), N &gt; 0.
+</div>
+
+<div class="nb-cell markdown" name="md28">
+Resultado: ``
+			 X=a; Y=[b]; N=1``
+</div>
+
+<div class="nb-cell query" name="q18">
+append([X,_|_], Y, [a,b]), length(Y, N), N &gt; 0.
+</div>
+
+<div class="nb-cell markdown" name="md29">
+Resultado: ``
+		false``
+</div>
+
+<div class="nb-cell query" name="q19">
+append(A, [_], [a,b,c]), reverse(A,B).
+</div>
+
+<div class="nb-cell markdown" name="md30">
+Resultado: ``A=[a,b]; B=[b,a]``
+</div>
+
+<div class="nb-cell query" name="q20">
+append(A, [5], [1,2,3,4,5]), member(X,A), 1 =:= X mod 2.
+</div>
+
+<div class="nb-cell query" name="q21">
+append(A, [c], [a,b,c]), member(X,A), !.
+</div>
+
+<div class="nb-cell query" name="q26">
+append(A, B, [a,b,c]), member(X,A).
+</div>
+
+<div class="nb-cell query" name="q27">
+append([a],B,L), member(b,B).
+</div>
+
+<div class="nb-cell markdown" name="md1">
+Para las siguientes consultas tenga en cuenta que el predicado predefinido sumlist(L,S) es cierto cuando L es una lista de números y S es su suma (S vale 0 cuando L es la lista vacía).
+</div>
+
+<div class="nb-cell query" name="q10">
+append([C|R], S, [4, 2, 3, 1]), sumlist([C|R], N), N =&lt; 6.
+</div>
+
+<div class="nb-cell query" name="q11">
+append([C|R], S, [4, 2, 3, a]), sumlist([C|R], N), N =&lt; 6.
+</div>
+
+<div class="nb-cell query" name="q12">
+append([C|R], S, [4, 2, 3, a]), !, sumlist([C|R], N), N =&lt; 6.
+</div>
+
+<div class="nb-cell query" name="q13">
+append([C|R], S, [4, 2, 3, 1]), sumlist([C|R], N), N &gt;= 20.
+</div>
+
+<div class="nb-cell html" name="htm4">
+En las dos siguientes consultas <code>p</code> y <code>q</code> solo son nombres de términos compuestos cuyo único
+objeto es unificar sus argumentos.
+</div>
+
+<div class="nb-cell query" name="q14">
+p(E, [_,E|R]) = p(3, [2|[F,4]]), append(A, B, [F|R]),
+length(A, LA), LA =&lt; 1.
+</div>
+
+<div class="nb-cell query" name="q15">
+q([a|[b,c]], F) = q([E,_|S], E), append(U, V, [F|S]),
+length(U, LU), LU &gt;= 1.
+</div>
+
+<div class="nb-cell html" name="htm5">
+<h4><strong> 3. Implementación de algunos predicados sobre listas</strong></h4>
+
+
+Implemente los predicados para el manejo de listas en 
+Prolog descritos a continuación y:
+<ul>
+<li> Compruebe que sus implementaciones son correctas 
+  haciendo consultas para casos significativos. 
+</li> 
+ <li> Pida a Prolog todas las posibles soluciones y 
+   asegúrese de que los predicados implementados 
+   <strong>solo devuelven la o las soluciones correctas. 
+   En caso de que  no sea así, use el predicado de corte 
+   adecuadamente.
+</strong> 
+</li>
+ <li> Cuando su implementación presente <strong>recursión lineal</strong>
+(una única llamada recursiva) pero no sea <strong>recursión final</strong> 
+(la llamada recursiva es lo último que se ejecuta) ni <strong>recursión final módulo cons</strong> 
+   (la llamada recursiva es lo penúltimo que se ejecuta, 
+   siendo lo último la construcción de la cabeza de una lista), <em>implemente una segunda
+  versión con <strong>recursión final (o recursión final módulo cons)</strong></em> mediante el uso de parámetros de 
+acumulación, de forma similar a como se hace en los apuntes con
+el predicado factorial o el predicado inversa.
+   </li>
+</ul>
+</div>
+
+<div class="nb-cell program" data-background="true" name="p1">
+% enesimo(?L, +N, ?E)
+% cierto si E es el elemento de la lista L situado 
+% en la posición N, entendiendo que la cabeza de la 
+% lista está situada en la posición 1 (debe fallar en
+% cualquier otro caso).
+% 
+% Proporcione una implementación RECURSIVA.
+%
+</div>
+
+<div class="nb-cell query" name="q7">
+
+</div>
+
+<div class="nb-cell query" name="q6">
+
+</div>
+
+<div class="nb-cell query" name="q5">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p3">
+% enesimo(?L, +N, ?E)
+% cierto si E es el elemento de la lista L situado 
+% en la posición N, entendiendo que la cabeza de la 
+% lista está situada en la posición 1.
+% 
+% Proporcione una implementación NO RECURSIVA, basada en el uso 
+% de algunos de los predicados predefinidos para el manejo de listas. 
+% PISTA: si usa append para descomponer la lista L en dos trozos
+% tales que el primer trozo tenga tamaño N-1, el primer elemento del 
+% segundo trozo será el N-ésimo de L.
+%
+</div>
+
+<div class="nb-cell query" name="q23">
+
+</div>
+
+<div class="nb-cell query" name="q22">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p2">
+% elimina_n(?L, +N, ?NL)
+% cierto si NL es la lista resultante después de 
+% eliminar el elemento de L situado en la posición N,
+% entendiendo que la cabeza de la lista está situada
+% en la posición 1. Si N es mayor que la longitud de 
+% L, NL será igual a L.
+% 
+% Proporcione una implementación RECURSIVA.
+%
+</div>
+
+<div class="nb-cell query" name="q43">
+
+</div>
+
+<div class="nb-cell query" name="q44">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p7">
+% elimina_n(?L, +N, ?NL)
+% cierto si NL es la lista resultante después de 
+% eliminar el elemento de L situado en la posición N,
+% entendiendo que la cabeza de la lista está situada
+% en la posición 1. Si N es mayor que la longitud de 
+% L, NL será igual a L.
+% 
+% Proporcione una implementación NO RECURSIVA, basada en el uso
+% de algunos de los predicados predefinidos para el manejo de listas.
+% PISTA: descomponga la lista en dos trozos adecuados y vuelva
+% a componerlos obviando el elemento n-ésimo. Tenga en cuenta
+% que si N es mayor que la longitud de la lista, el intento
+% de descomposición fallará y tendrá que tratar ese caso aparte.
+%
+</div>
+
+<div class="nb-cell query" name="q35">
+
+</div>
+
+<div class="nb-cell query" name="q36">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p6">
+% elimina_n_bis(?L, +N, ?NL)
+% cierto si NL es la lista resultante después de 
+% eliminar el elemento de L situado en la posición N,
+% entendiendo que la cabeza de la lista está situada
+% en la posición 1. **El predicado debe fallar si N es mayor 
+% que la longitud de L.**
+% 
+% Proporcione una implementación RECURSIVA.
+%
+</div>
+
+<div class="nb-cell query" name="q32">
+
+</div>
+
+<div class="nb-cell query" name="q33">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p5">
+% elimina_n_bbis(?L, +N, ?NL)
+% cierto si NL es la lista resultante después de 
+% eliminar el elemento de L situado en la posición N,
+% entendiendo que la cabeza de la lista está situada
+% en la posición 1. El predicado debe fallar si N es mayor 
+% que la longitud de L.
+% 
+% Proporcione una implementación NO RECURSIVA, basada en el uso
+% de algunos de los predicados predefinidos para el manejo de listas.
+% PISTA: descomponga la lista en dos trozos adecuados y vuelva
+% a componerlos obviando el elemento n-ésimo.
+%
+</div>
+
+<div class="nb-cell query" name="q31">
+
+</div>
+
+<div class="nb-cell query" name="q24">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p12">
+% borrartodos(+L,+E,?NL)
+% cierto si NL es la lista resultante después de 
+% eliminar de L todos los elementos idénticos a E 
+% (si los hay). Tenga en cuenta que no deben eliminarse elementos 
+% que unificables con E, sólo aquellos que sean idénticos. Por ejemplo,
+% borrartodos([a,b],X,[a,b]) y borrartodos([a,X], a, [X]) deben ser ciertos.
+%
+</div>
+
+<div class="nb-cell query" name="q49">
+
+</div>
+
+<div class="nb-cell query" name="q45">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p13">
+% insertardetras(+L,+E1,+E2,?NL)
+% cierto si NL es la lista resultante de insertar 
+% E2 justo detrás de cada aparición de E1 en L
+%
+</div>
+
+<div class="nb-cell query" name="q50">
+
+</div>
+
+<div class="nb-cell query" name="q51">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p14">
+% divide(+L, ?LNeg, ?LPos)
+% cierto si L es una lista de números, LNeg es una 
+% lista con los números negativos de L y LPos es 
+% una lista con los números nulos o positivos de L,
+% en ambos casos respetando el orden en el que 
+% aparecen en L. Facilite dos versiones distintas de este predicado, 
+% la segunda de ellas utilizando el corte.
+
+% VERSIÓN 1: Sin utilizar el predicado de corte
+
+
+% VERSIÓN 2: Utilizando el predicado de corte
+</div>
+
+<div class="nb-cell query" name="q52">
+
+</div>
+
+<div class="nb-cell query" name="q53">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p16">
+% cuenta_const(+TC, +L, ?N)
+% cierto si N es el número de apariciones del término 
+% constante TC como elemento de la lista L. Recuerde 
+% que Prolog proporciona predicados predefinidos para la 
+% clasificación de términos, entre los que figura atomic(X),
+% cierto si X es un término constante. Tenga en cuenta que no deben 
+% contarse elementos que sean unificables con TC, sólo aquellos que sean 
+% idénticos. Por ejemplo, la consulta “?- cuenta_const(a, [a,[a,p(a),b],X],N).” 
+% debe ser cierta con N=1, puesto que sólo una de las a’s que aparecen en L es 
+% un elemento de L (el resto de a’s están contenidas en el segundo elemento de L) 
+% y la variable X no debe contarse ya que, aunque es unificable con a, no es una a.
+%
+%
+</div>
+
+<div class="nb-cell query" name="q60">
+
+</div>
+
+<div class="nb-cell query" name="q61">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p17">
+% aplana(+L,?NL)
+% cierto si L es una lista y NL es la lista formada por todos los 
+% términos que aparecen en L, quitando las listas internas de L en 
+% caso de que las haya. Por ejemplo, la consulta 
+% ?- aplana([a, [X,p(a,Z),[b,[c]]], V], A).
+% debe ser cierta con A = [a, X, p(a,Z), b, c, V]
+% Pista: utilice los predicados is_list/1 y append/3.
+%
+</div>
+
+<div class="nb-cell query" name="q62">
+
+</div>
+
+<div class="nb-cell query" name="q63">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p19">
+% empaqueta(+L, ?NL), cierto si NL contiene los mismos elementos que 
+% la lista L pero de forma que toda ristra de elementos iguales 
+% consecutivos aparece empaquetada en una sublista. Por ejemplo, la 
+% consulta “empaqueta([a,a,a,b,a,a,c,c,d], X).” debe devolver cierto 
+% con X=[[a,a,a], [b], [a,a], [c,c], [d]]. Una posible solución 
+% consiste en implementar y utilizar en la implementación de 
+% empaqueta el predicado auxiliar lista_cabeza(+L, ?LC, ?LR), cierto 
+% si L es una lista, LC es la lista formada por la ristra de 
+% elementos iguales consecutivos que encabeza L y LR es lo que queda 
+% en la lista. Por ejemplo, la consulta 
+% “?- lista_cabeza([a,a,a,b,a,a,c,c,d], X, Y).” debe se cierta 
+% con X=[a,a,a] e Y=[b,a,a,c,c,d].
+%
+</div>
+
+<div class="nb-cell query" name="q66">
+
+</div>
+
+<div class="nb-cell query" name="q67">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p20">
+% codifica(+L, ?NL), cierto si L es una lista y NL es una lista 
+% cuyos elementos son listas de la forma [E,N], donde cada uno de 
+% estos pares representa una ristra de N elementos E consecutivos en
+% L. Por ejemplo, la consulta “?- codifica([a,a,a,b,a,a,c,c,d], LL).”
+% debe ser cierta con LL = [[a,3], [b,1], [a,2], [c,2], [d,1]]. 
+% Para la implementación de este predicado puede utilizar el 
+% predicado empaqueta/2 anterior así como el predicado predefinido 
+% length(?L, ?N), cierto si N es la longitud de la lista L.
+%
+</div>
+
+<div class="nb-cell query" name="q69">
+
+</div>
+
+<div class="nb-cell query" name="q68">
+
+</div>
+
+<div class="nb-cell program" data-background="true" name="p21">
+% asteriscos(+L)
+% recibe una lista de números naturales positivos y escribe para cada 
+% uno de ellos una línea con tantos asteriscos como indique el número 
+% correspondiente. Por ejemplo, la consulta “?- asteriscos([2,1,3]).”
+% debe devolver cierto y debe producir el efecto
+%  **
+%  *
+%  ***
+</div>
+
+</div>
